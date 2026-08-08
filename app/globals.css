@@ -1,0 +1,274 @@
+@import "tailwindcss";
+
+/*
+ * Feuille de style globale - Tailwind CSS v4.
+ * Thème "Console de Gestion" : glassmorphism / liquid glass.
+ * Thème clair/sombre via la classe .dark sur <html> (next-themes).
+ */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------ */
+/* Tokens                                                              */
+/* ------------------------------------------------------------------ */
+
+:root {
+  --couleur-fond: #f6f4ef;
+  --couleur-carte: rgba(255, 255, 255, 0.55);
+  --couleur-carte-solide: #ffffff;
+  --couleur-texte: #1a1c1e;
+  --couleur-texte-secondaire: #6b6f66;
+  --couleur-bordure: rgba(26, 28, 30, 0.08);
+  --couleur-primaire: #b45309;
+  --couleur-primaire-hover: #92400e;
+  --couleur-primaire-doux: rgba(180, 83, 9, 0.12);
+  --couleur-primaire-texte: #ffffff;
+
+  --verre-flou: 16px;
+  --verre-saturation: 160%;
+  --verre-surlignage: inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+  --verre-ombre: 0 8px 32px rgba(26, 28, 30, 0.08);
+
+  --lueur-1: rgba(245, 165, 36, 0.16);
+  --lueur-2: rgba(59, 130, 246, 0.1);
+  --lueur-3: rgba(180, 83, 9, 0.1);
+}
+
+.dark {
+  --couleur-fond: #0b0d10;
+  --couleur-carte: rgba(255, 255, 255, 0.04);
+  --couleur-carte-solide: #12151a;
+  --couleur-texte: #e8eaed;
+  --couleur-texte-secondaire: #9aa0a6;
+  --couleur-bordure: rgba(255, 255, 255, 0.08);
+  --couleur-primaire: #f5a524;
+  --couleur-primaire-hover: #ffb93d;
+  --couleur-primaire-doux: rgba(245, 165, 36, 0.14);
+  --couleur-primaire-texte: #1a1c1e;
+
+  --verre-surlignage: inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  --verre-ombre: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  --lueur-1: rgba(245, 165, 36, 0.14);
+  --lueur-2: rgba(59, 130, 246, 0.12);
+  --lueur-3: rgba(245, 165, 36, 0.08);
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+
+body {
+  background-color: var(--couleur-fond);
+  color: var(--couleur-texte);
+  font-family: var(--font-body), system-ui, sans-serif;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+h1,
+h2,
+h3,
+.font-affichage {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+}
+
+code,
+kbd,
+.font-mono-donnees {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ */
+/* Ambient glow (derrière le verre)                                    */
+/* ------------------------------------------------------------------ */
+
+.lueur-ambiante {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.lueur-ambiante::before,
+.lueur-ambiante::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+}
+
+.lueur-ambiante::before {
+  width: 60vw;
+  height: 60vw;
+  top: -20vw;
+  right: -15vw;
+  background: radial-gradient(circle, var(--lueur-1), transparent 70%);
+}
+
+.lueur-ambiante::after {
+  width: 50vw;
+  height: 50vw;
+  bottom: -15vw;
+  left: -10vw;
+  background: radial-gradient(circle, var(--lueur-2), transparent 70%);
+}
+
+/* ------------------------------------------------------------------ */
+/* Verre / liquid glass                                                */
+/* ------------------------------------------------------------------ */
+
+.verre {
+  background-color: var(--couleur-carte);
+  -webkit-backdrop-filter: blur(var(--verre-flou))
+    saturate(var(--verre-saturation));
+  backdrop-filter: blur(var(--verre-flou)) saturate(var(--verre-saturation));
+  border: 1px solid var(--couleur-bordure);
+  box-shadow: var(--verre-surlignage), var(--verre-ombre);
+}
+
+/* Fallback si backdrop-filter non supporté ou transparence réduite */
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
+  .verre {
+    background-color: var(--couleur-carte-solide);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .verre {
+    background-color: var(--couleur-carte-solide);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Barre de défilement discrète                                        */
+/* ------------------------------------------------------------------ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--couleur-bordure);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--couleur-texte-secondaire);
+}
+
+/* ------------------------------------------------------------------ */
+/* Couche de compatibilité — remap de l'ancienne palette               */
+/* (slate/blue) vers les nouveaux tokens verre/ambre.                  */
+/* S'applique aux classes Tailwind encore présentes dans les pages.    */
+/* ------------------------------------------------------------------ */
+
+/* Fonds de surface -> verre */
+.bg-white,
+.dark .dark\:bg-slate-800,
+.dark .dark\:bg-slate-800\/95,
+.bg-white\/95 {
+  background-color: var(--couleur-carte);
+}
+
+.dark .dark\:bg-slate-900,
+.dark .dark\:bg-slate-700 {
+  background-color: var(--couleur-carte);
+}
+
+/* Fond de page */
+.bg-slate-50 {
+  background-color: var(--couleur-fond);
+}
+.dark .dark\:bg-slate-900 {
+  background-color: var(--couleur-fond);
+}
+
+/* Bordures */
+.border-slate-200,
+.border-slate-300,
+.divide-slate-100 > * + *,
+.dark .dark\:border-slate-700,
+.dark .dark\:border-slate-600,
+.dark .dark\:divide-slate-700\/50 > * + * {
+  border-color: var(--couleur-bordure);
+}
+
+/* Textes */
+.text-slate-900,
+.text-slate-700,
+.dark .dark\:text-slate-100,
+.dark .dark\:text-slate-200,
+.dark .dark\:text-slate-300 {
+  color: var(--couleur-texte);
+}
+
+.text-slate-600,
+.text-slate-500,
+.text-slate-400,
+.dark .dark\:text-slate-400,
+.dark .dark\:text-slate-500 {
+  color: var(--couleur-texte-secondaire);
+}
+
+/* Accent bleu -> ambre */
+.bg-blue-600,
+.dark .dark\:bg-blue-500 {
+  background-color: var(--couleur-primaire);
+}
+.hover\:bg-blue-700:hover,
+.dark .dark\:hover\:bg-blue-600:hover {
+  background-color: var(--couleur-primaire-hover);
+}
+.text-blue-600,
+.dark .dark\:text-blue-400,
+.dark .dark\:text-blue-300 {
+  color: var(--couleur-primaire);
+}
+.hover\:text-blue-700:hover,
+.hover\:text-blue-600:hover,
+.dark .dark\:hover\:text-blue-400:hover {
+  color: var(--couleur-primaire-hover);
+}
+.bg-blue-50,
+.dark .dark\:bg-blue-900\/30,
+.dark .dark\:bg-blue-900\/50 {
+  background-color: var(--couleur-primaire-doux);
+}
+.text-blue-700 {
+  color: var(--couleur-primaire);
+}
+.border-blue-500,
+.focus\:border-blue-500:focus {
+  border-color: var(--couleur-primaire);
+}
+.focus\:ring-blue-500:focus,
+.focus\:ring-blue-500\/20:focus {
+  --tw-ring-color: var(--couleur-primaire);
+}
+.border-t-blue-600,
+.dark .dark\:border-t-blue-400 {
+  border-top-color: var(--couleur-primaire);
+}
+
+/* Survols neutres -> teinte ambre douce */
+.hover\:bg-slate-100:hover,
+.dark .dark\:hover\:bg-slate-700:hover,
+.dark .dark\:hover\:bg-slate-700\/50:hover,
+.dark .dark\:hover\:bg-slate-700\/30:hover,
+.hover\:bg-slate-50:hover {
+  background-color: var(--couleur-primaire-doux);
+}
+
+/* Chips icônes colorées -> teinte ambre douce + accent */
+.bg-blue-100,
+.dark .dark\:bg-blue-900\/30,
+.dark .dark\:bg-blue-900\/50 {
+  background-color: var(--couleur-primaire-doux);
+}
