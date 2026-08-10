@@ -3,28 +3,23 @@ import { jwtVerify } from "jose";
 import { CLE_SECRETE } from "./lib/jwt-config";
 
 /**
- * Middleware d'authentification.
+ * Proxy d'authentification.
  * Protège toutes les pages sauf /connexion.
  * Vérifie le jeton JWT stocké dans le cookie httpOnly.
- * (jose est compatible avec l'Edge Runtime utilisé par le middleware)
+ * (jose est compatible avec l'Edge Runtime utilisé par le proxy)
  */
 
 // Chemins publics (accessibles sans connexion)
 const CHEMINS_PUBLICS = ["/", "/connexion"];
 
-export async function middleware(requete: NextRequest) {
+// Routes API publiques (authentification)
+const API_PUBLIQUES = ["/api/auth/connexion", "/api/auth/deconnexion"];
+
+export async function proxy(requete: NextRequest) {
   const { pathname } = requete.nextUrl;
 
-  // Les routes API gèrent elles-mêmes leur logique (connexion/inscription publiques)
-  if (pathname.startsWith("/api")) {
-    return NextResponse.next();
-  }
-
-  // Exact match for public paths
-  const estPublic = CHEMINS_PUBLICS.includes(pathname);
-  const token = requete.cookies.get("session_token")?.value;
-
   // Vérification du jeton
+  const token = requete.cookies.get("session_token")?.value;
   let sessionValide = false;
   if (token) {
     try {
@@ -35,9 +30,23 @@ export async function middleware(requete: NextRequest) {
     }
   }
 
+  // Routes API : publiques (auth) ou protégées (tout le reste)
+  if (pathname.startsWith("/api")) {
+    if (API_PUBLIQUES.some((p) => pathname.startsWith(p))) {
+      return NextResponse.next();
+    }
+    if (!sessionValide) {
+      return NextResponse.json({ message: "Non authentifié" }, { status: 401 });
+    }
+    return NextResponse.next();
+  }
+
+  // Exact match for public paths
+  const estPublic = CHEMINS_PUBLICS.includes(pathname);
+
   // Utilisateur connecté sur une page publique (/, /connexion) → redirection vers le dashboard
   if (estPublic && sessionValide) {
-    return NextResponse.redirect(new URL("/factures", requete.url));
+    return NextResponse.redirect(new URL("/tableau-de-bord", requete.url));
   }
 
   // Utilisateur non connecté sur une page protégée → redirection vers connexion
