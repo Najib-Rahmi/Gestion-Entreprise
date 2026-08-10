@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connecterDB } from "@/lib/mongodb";
 import Facture from "@/models/Facture";
+import { schemaFacture, valider } from "@/lib/validation";
 
 /**
  * GET /api/factures
@@ -49,9 +50,14 @@ export async function GET(requete: NextRequest) {
 export async function POST(requete: NextRequest) {
   try {
     await connecterDB();
-    const donnees = await requete.json();
+    const corps = await requete.json();
 
-    const facture = await Facture.create(donnees);
+    const resultat = valider(schemaFacture, corps);
+    if (!resultat.succes) {
+      return NextResponse.json({ message: resultat.message }, { status: 400 });
+    }
+
+    const facture = await Facture.create(resultat.donnees);
     const factureAvecClient = await Facture.findById(facture._id)
       .populate("client", "nom adresse tva")
       .lean();

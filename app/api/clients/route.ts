@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connecterDB } from "@/lib/mongodb";
 import Client from "@/models/Client";
+import { schemaClient, valider } from "@/lib/validation";
 
 /**
  * GET /api/clients
@@ -48,13 +49,19 @@ export async function GET(requete: NextRequest) {
 export async function POST(requete: NextRequest) {
   try {
     await connecterDB();
-    const donnees = await requete.json();
+    const corps = await requete.json();
 
-    const client = await Client.create(donnees);
+    const resultat = valider(schemaClient, corps);
+    if (!resultat.succes) {
+      return NextResponse.json({ message: resultat.message }, { status: 400 });
+    }
+
+    const client = await Client.create(resultat.donnees);
     return NextResponse.json(client, { status: 201 });
   } catch (erreur: unknown) {
     console.error("Erreur POST client :", erreur);
-    const message = erreur instanceof Error ? erreur.message : "Erreur lors de la création";
+    const message =
+      erreur instanceof Error ? erreur.message : "Erreur lors de la création";
     return NextResponse.json({ message }, { status: 400 });
   }
 }

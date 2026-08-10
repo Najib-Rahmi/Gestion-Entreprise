@@ -3,6 +3,12 @@ import bcrypt from "bcryptjs";
 import { connecterDB } from "@/lib/mongodb";
 import Utilisateur from "@/models/Utilisateur";
 import { creerToken, definirCookieSession } from "@/lib/auth";
+import { verifierLimite } from "@/lib/rate-limit";
+import { schemaConnexion, valider } from "@/lib/validation";
+
+// 5 tentatives par IP toutes les 15 minutes
+const LIMITE_CONNEXION = 5;
+const FENETRE_CONNEXION_MS = 15 * 60 * 1000;
 
 /**
  * POST /api/auth/connexion
@@ -10,15 +16,38 @@ import { creerToken, definirCookieSession } from "@/lib/auth";
  */
 export async function POST(requete: NextRequest) {
   try {
-    const { email, motDePasse } = await requete.json();
-
-    // Validation des champs
-    if (!email || !motDePasse) {
+    // Limitation de débit contre les attaques par force brute
+    const ip =
+      requete.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
+      requete.headers.get("x-real-ip") ??
+      "inconnu";
+    const limite = verifierLimite(
+      `connexion:${ip}`,
+      LIMITE_CONNEXION,
+      FENETRE_CONNEXION_MS,
+    );
+    if (!limite.autorise) {
       return NextResponse.json(
-        { message: "Email et mot de passe requis" },
-        { status: 400 },
+        { message: "Trop de tentatives. Réessayez plus tard." },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": Math.ceil(
+              (limite.reinitialisation - Date.now()) / 1000,
+            ).toString(),
+          },
+        },
       );
     }
+
+    const corps = await requete.json();
+
+    // Validation des champs
+    const resultat = valider(schemaConnexion, corps);
+    if (!resultat.succes) {
+      return NextResponse.json({ message: resultat.message }, { status: 400 });
+    }
+    const { email, motDePasse } = resultat.donnees;
 
     await connecterDB();
 
