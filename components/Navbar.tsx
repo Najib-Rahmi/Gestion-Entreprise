@@ -3,21 +3,35 @@
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { FileText, LogOut, Menu, X, Building2 } from "lucide-react";
+import {
+  FileText,
+  LogOut,
+  Menu,
+  X,
+  Building2,
+  LayoutDashboard,
+  Users,
+} from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import BasculeTheme from "@/components/ui/BasculeTheme";
 
 /**
  * Barre de navigation horizontale principale (navbar).
- * - Liens vers les 3 modules : Factures, Clients, Employés
+ * - Liens vers les modules : Tableau de bord, Factures, Clients, Employés
  * - Bouton de bascule de thème et déconnexion
  * - Responsive : menu hamburger déroulant sur mobile
  */
 
 const LIENS_NAVIGATION = [
+  {
+    href: "/tableau-de-bord",
+    libelle: "Tableau de bord",
+    icone: LayoutDashboard,
+  },
   { href: "/factures", libelle: "Factures", icone: FileText },
   { href: "/clients", libelle: "Clients", icone: Building2 },
+  { href: "/employes", libelle: "Employés", icone: Users },
 ];
 
 export default function Navbar() {
@@ -64,7 +78,9 @@ export default function Navbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo / nom de l'application */}
         <Link
-          href={verificationFini ? (estConnecte ? "/factures" : "/") : "#"}
+          href={
+            verificationFini ? (estConnecte ? "/tableau-de-bord" : "/") : "#"
+          }
           className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-(--couleur-primaire) text-(--couleur-primaire-texte) shadow-[0_4px_14px_rgba(245,165,36,0.4)]">
             <Building2 size={20} />

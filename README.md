@@ -100,21 +100,21 @@ scripts/
 
 ## Routes API
 
-| Méthode        | Route                          | Description                              |
-| -------------- | ------------------------------ | ---------------------------------------- |
-| POST           | `/api/auth/connexion`          | Se connecter (limité à 5 tentatives / 15 min) |
-| POST           | `/api/auth/deconnexion`        | Se déconnecter                           |
-| GET            | `/api/auth/profil`             | Profil de l'utilisateur connecté         |
-| GET/POST       | `/api/clients`                 | Lister / créer des clients               |
-| GET/PUT/DELETE | `/api/clients/[id]`            | Consulter / modifier / supprimer un client |
-| GET/POST       | `/api/factures`                | Lister / créer des factures              |
-| GET/PUT/DELETE | `/api/factures/[id]`           | Consulter / modifier / supprimer une facture |
-| GET            | `/api/factures/[id]/pdf`       | Télécharger la facture en PDF            |
-| GET/POST       | `/api/employes`                | Lister (avec soldes) / créer des employés |
-| GET/PUT/DELETE | `/api/employes/[id]`           | Consulter / modifier / supprimer un employé |
-| POST/PUT       | `/api/employes/[id]/jours`     | Basculer un jour travaillé / marquer payé |
-| GET/POST/DELETE| `/api/employes/[id]/avances`   | Lister / ajouter / supprimer des avances |
-| GET            | `/api/statistiques`            | Statistiques du tableau de bord          |
+| Méthode         | Route                        | Description                                   |
+| --------------- | ---------------------------- | --------------------------------------------- |
+| POST            | `/api/auth/connexion`        | Se connecter (limité à 5 tentatives / 15 min) |
+| POST            | `/api/auth/deconnexion`      | Se déconnecter                                |
+| GET             | `/api/auth/profil`           | Profil de l'utilisateur connecté              |
+| GET/POST        | `/api/clients`               | Lister / créer des clients                    |
+| GET/PUT/DELETE  | `/api/clients/[id]`          | Consulter / modifier / supprimer un client    |
+| GET/POST        | `/api/factures`              | Lister / créer des factures                   |
+| GET/PUT/DELETE  | `/api/factures/[id]`         | Consulter / modifier / supprimer une facture  |
+| GET             | `/api/factures/[id]/pdf`     | Télécharger la facture en PDF                 |
+| GET/POST        | `/api/employes`              | Lister (avec soldes) / créer des employés     |
+| GET/PUT/DELETE  | `/api/employes/[id]`         | Consulter / modifier / supprimer un employé   |
+| POST/PUT        | `/api/employes/[id]/jours`   | Basculer un jour travaillé / marquer payé     |
+| GET/POST/DELETE | `/api/employes/[id]/avances` | Lister / ajouter / supprimer des avances      |
+| GET             | `/api/statistiques`          | Statistiques du tableau de bord               |
 
 ## Scripts
 

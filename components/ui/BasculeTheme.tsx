@@ -9,7 +9,7 @@ import { Moon, Sun } from "lucide-react";
  * Affiche une icône soleil/lune selon le thème actif.
  */
 export default function BasculeTheme() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [monte, setMonte] = useState(false);
 
   // Évite l'erreur d'hydratation : le thème n'est connu qu'après le montage
@@ -24,7 +24,7 @@ export default function BasculeTheme() {
     );
   }
 
-  const estSombre = theme === "dark";
+  const estSombre = resolvedTheme === "dark";
 
   return (
     <button

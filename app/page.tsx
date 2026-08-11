@@ -6,6 +6,11 @@ import {
   FileText,
   Users,
   ArrowRight,
+  CalendarCheck,
+  Wallet,
+  FileDown,
+  ShieldCheck,
+  Smartphone,
   TrendingUp,
 } from "lucide-react";
 import { Carte } from "@/components/ui/Carte";
@@ -14,13 +19,13 @@ import BasculeTheme from "@/components/ui/BasculeTheme";
 
 /**
  * Page d'accueil publique (landing page).
- * Affiche une présentation de l'application et un bouton de connexion.
+ * Présente les trois modules : Factures, Clients et Employés.
  */
 export default function PageAccueil() {
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
-      <header className="verre border-b border-(--couleur-bordure)">
+      <header className="verre sticky top-0 z-10 border-b border-(--couleur-bordure)">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link
             href="/"
@@ -33,7 +38,7 @@ export default function PageAccueil() {
                 Gestion Entreprise
               </p>
               <p className="text-xs text-(--couleur-texte-secondaire)">
-                Factures · Clients
+                Factures · Clients · Employés
               </p>
             </div>
           </Link>
@@ -55,56 +60,29 @@ export default function PageAccueil() {
 
       {/* Hero Section */}
       <main className="flex-1">
-        <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-12">
+        <section className="mx-auto max-w-7xl px-4 pt-16 pb-12 sm:px-6 lg:px-8 lg:pt-24">
           <div className="text-center">
-            <div className="mx-auto mb-8 flex items-center justify-center gap-4">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-(--couleur-primaire) text-(--couleur-primaire-texte) shadow-[0_8px_30px_rgba(245,165,36,0.45)]">
-                <TrendingUp size={32} />
-              </div>
-              <h1 className="font-affichage text-4xl font-bold tracking-tight text-(--couleur-texte) sm:text-5xl">
-                Gérez votre entreprise simplement
-              </h1>
-            </div>
-            <p className="mx-auto max-w-2xl text-lg text-(--couleur-texte-secondaire)">
-              Une application complète pour gérer vos factures et clients.
-              Sécurisée, rapide et accessible partout.
+            <span className="verre inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-(--couleur-texte-secondaire)">
+              <TrendingUp
+                size={14}
+                className="text-(--couleur-primaire)"
+              />
+              Gestion d'entreprise tout-en-un
+            </span>
+            <h1 className="font-affichage mx-auto mt-6 max-w-3xl text-4xl font-bold tracking-tight text-(--couleur-texte) sm:text-6xl">
+              Gérez votre entreprise{" "}
+              <span className="text-(--couleur-primaire)">simplement</span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-(--couleur-texte-secondaire)">
+              Factures, clients et paie des employés réunis dans une seule
+              application. Sécurisée, rapide et accessible partout.
             </p>
-
-            {/* Features - moved before button */}
-            <div className="mt-12 flex flex-wrap justify-center gap-6 max-w-5xl mx-auto">
-              <Carte className="w-full max-w-sm p-6">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-(--couleur-primaire-doux) text-(--couleur-primaire)">
-                  <FileText size={24} />
-                </div>
-                <h3 className="font-affichage mb-2 text-xl font-semibold text-(--couleur-texte)">
-                  Factures
-                </h3>
-                <p className="text-(--couleur-texte-secondaire)">
-                  Création, modification, génération PDF, timbre fiscal, TVA.
-                </p>
-              </Carte>
-
-              <Carte className="w-full max-w-sm p-6">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-(--couleur-primaire-doux) text-(--couleur-primaire)">
-                  <Users size={24} />
-                </div>
-                <h3 className="font-affichage mb-2 text-xl font-semibold text-(--couleur-texte)">
-                  Clients
-                </h3>
-                <p className="text-(--couleur-texte-secondaire)">
-                  Gestion complète des clients avec adresse, numéro TVA,
-                  historique des factures et totaux.
-                </p>
-              </Carte>
-            </div>
-
-            {/* Connect button */}
             <div className="mt-10 flex justify-center gap-4">
               <Link href="/connexion">
                 <Bouton
                   taille="lg"
-                  className="w-48">
-                  Se connecter{" "}
+                  className="w-52">
+                  Commencer{" "}
                   <ArrowRight
                     size={16}
                     className="ml-2"
@@ -112,6 +90,97 @@ export default function PageAccueil() {
                 </Bouton>
               </Link>
             </div>
+          </div>
+        </section>
+
+        {/* Modules */}
+        <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+          <div className="grid gap-6 md:grid-cols-3">
+            <Carte className="p-6">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-(--couleur-primaire-doux) text-(--couleur-primaire)">
+                <FileText size={24} />
+              </div>
+              <h3 className="font-affichage mb-2 text-xl font-semibold text-(--couleur-texte)">
+                Factures
+              </h3>
+              <p className="text-(--couleur-texte-secondaire)">
+                Création, modification, génération PDF, timbre fiscal et TVA.
+              </p>
+            </Carte>
+
+            <Carte className="p-6">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-(--couleur-primaire-doux) text-(--couleur-primaire)">
+                <Users size={24} />
+              </div>
+              <h3 className="font-affichage mb-2 text-xl font-semibold text-(--couleur-texte)">
+                Clients
+              </h3>
+              <p className="text-(--couleur-texte-secondaire)">
+                Base de clients complète avec adresse, numéro TVA et historique
+                des factures.
+              </p>
+            </Carte>
+
+            <Carte className="p-6">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-(--couleur-primaire-doux) text-(--couleur-primaire)">
+                <CalendarCheck size={24} />
+              </div>
+              <h3 className="font-affichage mb-2 text-xl font-semibold text-(--couleur-texte)">
+                Employés
+              </h3>
+              <p className="text-(--couleur-texte-secondaire)">
+                Suivi de présence, avances et calcul automatique de la paie.
+              </p>
+            </Carte>
+          </div>
+        </section>
+
+        {/* Points forts */}
+        <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+          <h2 className="font-affichage mb-10 text-center text-2xl font-bold text-(--couleur-texte) sm:text-3xl">
+            Conçue pour le quotidien
+          </h2>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                icone: FileDown,
+                titre: "PDF en un clic",
+                texte:
+                  "Générez des factures PDF professionnelles instantanément.",
+              },
+              {
+                icone: Wallet,
+                titre: "Paie maîtrisée",
+                texte:
+                  "Solde dû calculé en temps réel à partir des présences et avances.",
+              },
+              {
+                icone: ShieldCheck,
+                titre: "Sécurisée",
+                texte:
+                  "Sessions chiffrées et données protégées par authentification.",
+              },
+              {
+                icone: Smartphone,
+                titre: "Partout",
+                texte:
+                  "Interface responsive, utilisable sur mobile comme sur ordinateur.",
+              },
+            ].map(({ icone: Icone, titre, texte }) => (
+              <div
+                key={titre}
+                className="text-center">
+                <div className="verre mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-(--couleur-primaire)">
+                  <Icone size={22} />
+                </div>
+                <h3 className="font-affichage mb-1 font-semibold text-(--couleur-texte)">
+                  {titre}
+                </h3>
+                <p className="text-sm text-(--couleur-texte-secondaire)">
+                  {texte}
+                </p>
+              </div>
+            ))}
           </div>
         </section>
       </main>

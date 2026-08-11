@@ -30,6 +30,11 @@ export default function Footer() {
           {/* Liens rapides vers les modules */}
           <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <Link
+              href="/tableau-de-bord"
+              className="text-sm text-(--couleur-texte-secondaire) transition-colors hover:text-(--couleur-primaire)">
+              Tableau de bord
+            </Link>
+            <Link
               href="/factures"
               className="text-sm text-(--couleur-texte-secondaire) transition-colors hover:text-(--couleur-primaire)">
               Factures
@@ -38,6 +43,11 @@ export default function Footer() {
               href="/clients"
               className="text-sm text-(--couleur-texte-secondaire) transition-colors hover:text-(--couleur-primaire)">
               Clients
+            </Link>
+            <Link
+              href="/employes"
+              className="text-sm text-(--couleur-texte-secondaire) transition-colors hover:text-(--couleur-primaire)">
+              Employés
             </Link>
           </nav>
         </div>

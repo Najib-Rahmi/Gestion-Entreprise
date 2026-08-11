@@ -14,7 +14,7 @@ import { toast } from "sonner";
 interface FactureItem {
   _id: string;
   numero: string;
-  client: { _id: string; nom: string } | string;
+  client: { _id: string; nom: string } | string | null;
   projet: string;
   date: string;
   timbre: number;
@@ -51,7 +51,6 @@ export default function PageFactures() {
     loading,
     error,
     refresh,
-    total,
     searchParams,
     setSearchParams,
   } = useListWithTotal<FactureItem>({
@@ -84,6 +83,9 @@ export default function PageFactures() {
 
   const clientOptions = clients.map((c) => ({ valeur: c._id, libelle: c.nom }));
 
+  // Total TTC de toutes les factures affichées
+  const totalTTC = factures.reduce((somme, f) => somme + (f.totalTTC || 0), 0);
+
   async function telechargerPDF(id: string, numero: string) {
     try {
       const res = await fetch(`/api/factures/${id}/pdf`);
@@ -106,7 +108,7 @@ export default function PageFactures() {
     <div>
       <EntetePage
         titre="Factures"
-        description={`Total : ${formaterMontant(total)}`}>
+        description={`Total : ${formaterMontant(totalTTC)}`}>
         <Link href="/factures/nouvelle">
           <Bouton>
             <Plus size={16} />
@@ -189,9 +191,9 @@ export default function PageFactures() {
                       {facture.numero}
                     </td>
                     <td className="px-5 py-3 text-slate-600 dark:text-slate-300">
-                      {typeof facture.client === "object"
+                      {facture.client && typeof facture.client === "object"
                         ? facture.client.nom
-                        : facture.client}
+                        : (facture.client ?? "Client supprimé")}
                     </td>
                     <td className="px-5 py-3 text-slate-600 dark:text-slate-300 max-w-36 truncate">
                       {facture.projet}
@@ -205,7 +207,9 @@ export default function PageFactures() {
                     <td className="px-5 py-3">
                       <div className="flex items-center justify-end gap-1">
                         <button
-                          onClick={() => telechargerPDF(facture._id, facture.numero)}
+                          onClick={() =>
+                            telechargerPDF(facture._id, facture.numero)
+                          }
                           title="Télécharger PDF"
                           className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-blue-600 dark:text-slate-400 dark:hover:bg-slate-700">
                           <Download size={16} />

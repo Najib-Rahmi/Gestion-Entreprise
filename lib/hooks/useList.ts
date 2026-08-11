@@ -30,7 +30,8 @@ export function useList<T>({
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [searchParams, setSearchParamsState] = useState<Record<string, string>>(initialSearchParams);
+  const [searchParams, setSearchParamsState] =
+    useState<Record<string, string>>(initialSearchParams);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -44,7 +45,8 @@ export function useList<T>({
     } catch (err) {
       setError(true);
       setData([]);
-      const errorMessage = err instanceof Error ? err.message : "Erreur lors du chargement";
+      const errorMessage =
+        err instanceof Error ? err.message : "Erreur lors du chargement";
       toast.error(errorMessage);
       onError?.(err instanceof Error ? err : new Error(errorMessage));
     } finally {
@@ -68,7 +70,10 @@ export function useList<T>({
   return { data, loading, error, refresh, setSearchParams, searchParams };
 }
 
-interface UseListWithTotalOptions<T> extends UseListOptions<{ items: T[]; total: number }> {
+interface UseListWithTotalOptions<T> extends UseListOptions<{
+  items: T[];
+  total: number;
+}> {
   totalKey?: string;
 }
 
@@ -94,6 +99,12 @@ export function useListWithTotal<T>({
       setTotal((json as { total?: number }).total ?? 0);
       return (json as { items: T[] }).items;
     }
+    // Tableau simple : le total correspond au nombre d'éléments
+    if (Array.isArray(json)) {
+      setTotal(json.length);
+      return json as T[];
+    }
+    setTotal(0);
     return json as T[];
   }, []);
 

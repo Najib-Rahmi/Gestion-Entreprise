@@ -164,7 +164,7 @@ kbd,
 }
 
 /* ------------------------------------------------------------------ */
-/* Couche de compatibilité — remap de l'ancienne palette               */
+/* Couche de compatibilité : remap de l'ancienne palette               */
 /* (slate/blue) vers les nouveaux tokens verre/ambre.                  */
 /* S'applique aux classes Tailwind encore présentes dans les pages.    */
 /* ------------------------------------------------------------------ */
